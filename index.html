@@ -125,7 +125,7 @@
   <style>
     .colorschemeClass {
       display: block;
-      width:fit-content;
+      width: fit-content;
       height: 25px;
       margin-bottom: 4px;
     }
@@ -376,6 +376,30 @@
         });
     }
 
+    function top100Words(string) {
+      // Convert the string to lowercase and split it into an array of words.
+      const words = string.toLowerCase().split(/\W+/);
+
+      // Create a map to store the frequency of each word.
+      const wordFrequencyMap = {};
+      for (const word of words) {
+        if (!wordFrequencyMap[word]) {
+          wordFrequencyMap[word] = 0;
+        }
+        wordFrequencyMap[word]++;
+      }
+
+      // Sort the map by the frequency of each word, in descending order.
+      const sortedWordFrequencyMap = Object.entries(wordFrequencyMap).sort((a, b) => b[1] - a[1]);
+
+      // Get the top 100 words.
+      const top100Words = sortedWordFrequencyMap.slice(0, 100);
+
+      // Return the top 100 words.
+      return top100Words;
+    }
+
+
     function generateWordCloud(txt) {
 
 
@@ -398,7 +422,6 @@
       const temp3 = Object.values(wordCounts);
       console.log("Max = ", Math.max(...temp3));
 
-      var sortedTemp3 = temp3.sort((a, b) => a - b);
       var med = findMedian(sortedTemp3);
 
       var maxVal = Math.max(...temp3);
@@ -532,7 +555,7 @@
           <div class="home-container1">
             <div class="home-schemes">
               <h3 class="home-text2">Colour scheme</h3>
-              <p>Click to select</p> 
+              <p>Click to select</p>
               <br>
               <div id="schemesDIV" class="home-container2"></div>
             </div>
