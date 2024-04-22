@@ -1,0 +1,190 @@
+.home-container {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.home-pagecontainer {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  padding: var(--dl-space-space-unit);
+  align-items: flex-start;
+  flex-direction: column;
+  background-clip: content-box;
+  justify-content: flex-start;
+}
+.home-bannercontainer {
+  width: 100%;
+  height: 163px;
+  display: flex;
+  box-shadow: 5px 5px 10px 0px #d4d4d4;
+  align-items: center;
+  background-size: contain;
+  justify-content: flex-start;
+  background-image: url("public/1.svg");
+  background-repeat: no-repeat;
+  background-position: right;
+}
+.home-text {
+  font-size: 3em;
+  font-family: "Georgia";
+}
+.home-modal-window {
+  top: 100px;
+  right: 300px;
+  width: 900px;
+  height: 420px;
+  display: block;
+  padding: var(--dl-space-space-unit);
+  z-index: 9999;
+  position: fixed;
+  box-shadow: 2px 4px 6px silver;
+  visibility: hidden;
+  border-radius: var(--dl-radius-radius-radius8);
+  background-color: var(--dl-color-gray-900);
+  backface-visibility: 1px solid black;
+}
+.home-text1 {
+  margin-bottom: var(--dl-space-space-unit);
+}
+.home-textarea {
+  width: 868px;
+  height: 50px;
+  resize: none;
+}
+.home-container1 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.home-schemes {
+  flex: 0 0 auto;
+  width: 423px;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  flex-direction: column;
+  padding-bottom: 0px;
+  justify-content: flex-start;
+}
+.home-text2 {
+  width: 100%;
+  margin-top: var(--dl-space-space-halfunit);
+  margin-bottom: var(--dl-space-space-halfunit);
+}
+.home-container2 {
+  width: 100%;
+  height: 265px;
+  display: block;
+  align-items: flex-start;
+}
+.home-container3 {
+  gap: var(--dl-space-space-unit);
+  flex: 0 0 auto;
+  width: 423px;
+  height: 100%;
+  display: flex;
+  position: relative;
+  padding-left: var(--dl-space-space-halfunit);
+  flex-direction: column;
+}
+.home-buttonscontainer {
+  gap: var(--dl-space-space-unit);
+  flex: 0 0 auto;
+  right: 0px;
+  width: 100%;
+  bottom: 0px;
+  height: var(--dl-size-size-small);
+  display: flex;
+  padding: var(--dl-space-space-halfunit);
+  position: absolute;
+  flex-wrap: wrap;
+  align-self: flex-start;
+  align-items: flex-end;
+  flex-direction: row;
+  justify-content: center;
+}
+.home-container4 {
+  gap: var(--dl-space-space-halfunit);
+  width: 100%;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-space-space-unit);
+  justify-content: flex-start;
+}
+.home-textarea1 {
+  width: 90%;
+  height: 100%;
+  resize: none;
+}
+.home-container5 {
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  align-items: stretch;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.home-button2 {
+  width: 100%;
+  margin-right: 0px;
+}
+.home-button3 {
+  width: 100%;
+  text-align: center;
+  margin-right: var(--dl-space-space-unit);
+}
+.home-button4 {
+  width: 100%;
+  text-align: center;
+  margin-right: var(--dl-space-space-unit);
+}
+.home-container6 {
+  gap: var(--dl-space-space-halfunit);
+  width: 100%;
+  height: 736px;
+  display: flex;
+  padding: var(--dl-space-space-threeunits);
+  flex-wrap: wrap;
+  align-self: flex-start;
+  border-color: var(--dl-color-gray-black);
+  border-width: 1px;
+  justify-content: center;
+  background-color: #080808;
+}
+@media(max-width: 1600px) {
+  .home-container4 {
+    height: 150px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .home-textarea1 {
+    width: 90%;
+    height: 100%;
+  }
+  .home-container5 {
+    displ: flex;
+    padding: var(--dl-space-space-halfunit);
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .home-button2 {
+    margin-right: var(--dl-space-space-unit);
+  }
+}
