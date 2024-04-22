@@ -1,485 +1,557 @@
 <!DOCTYPE html>
-<html lang="en"
-  ><head
-    ><title>Word Cloud Generator</title
-    ><meta property="og:title" content="Word Cloud Generator" /><meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    /><meta charset="utf-8" /><meta
-      property="twitter:card"
-      content="summary_large_image"
-    /><style data-tag="reset-style-sheet">
-      html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}button {  background-color: transparent;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type="button"]:-moz-focus,[type="reset"]:-moz-focus,[type="submit"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}html { scroll-behavior: smooth  }</style
-    ><style data-tag="default-style-sheet">
-      html {
-        font-family: Inter;
-        font-size: 16px;
+<html lang="en">
+
+<head>
+  <title>Word Cloud Generator</title>
+  <meta property="og:title" content="Word Cloud Generator" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <style data-tag="reset-style-sheet">
+    html {
+      line-height: 1.15;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      border-width: 0;
+      border-style: solid;
+    }
+
+    p,
+    li,
+    ul,
+    pre,
+    div,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    figure,
+    blockquote,
+    figcaption {
+      margin: 0;
+      padding: 0;
+    }
+
+    button {
+      background-color: transparent;
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea {
+      font-family: inherit;
+      font-size: 100%;
+      line-height: 1.15;
+      margin: 0;
+    }
+
+    button,
+    select {
+      text-transform: none;
+    }
+
+    button,
+    [type="button"],
+    [type="reset"],
+    [type="submit"] {
+      -webkit-appearance: button;
+    }
+
+    button::-moz-focus-inner,
+    [type="button"]::-moz-focus-inner,
+    [type="reset"]::-moz-focus-inner,
+    [type="submit"]::-moz-focus-inner {
+      border-style: none;
+      padding: 0;
+    }
+
+    button:-moz-focus,
+    [type="button"]:-moz-focus,
+    [type="reset"]:-moz-focus,
+    [type="submit"]:-moz-focus {
+      outline: 1px dotted ButtonText;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: inherit;
+    }
+
+    input {
+      padding: 2px 4px;
+    }
+
+    img {
+      display: block;
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+  </style>
+  <style data-tag="default-style-sheet">
+    html {
+      font-family: Inter;
+      font-size: 16px;
+    }
+
+    body {
+      font-weight: 400;
+      font-style: normal;
+      text-decoration: none;
+      text-transform: none;
+      letter-spacing: normal;
+      line-height: 1.15;
+      color: var(--dl-color-gray-black);
+      background-color: var(--dl-color-gray-white);
+
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/animate.css@4.1.1/animate.css" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+    data-tag="font" />
+  <link rel="stylesheet" href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css" />
+  <style>
+    .colorschemeClass {
+      display: block;
+      width: auto;
+      height: 25px;
+      margin-bottom: 4px;
+    }
+
+    .colorschemeClass:hover {
+      border: 2px solid red;
+    }
+
+    .bgPatchClass {
+      display: inline-block;
+      width: 100px;
+      height: 25px;
+    }
+
+    .fontColorPatchClass {
+      display: inline-block;
+      width: 50px;
+      height: 25px;
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+    integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+
+
+    var colorSchemes = [
+
+      {
+        background: "white",
+        fontColors: ["8ecae6", "219ebc", "023047", "ffb703", "fb8500"]
+      },
+      {
+        background: "white",
+        fontColors: ["606c38", "283618", "fefae0", "dda15e", "bc6c25"]
+      },
+      {
+        background: "black",
+        fontColors: ["cdb4db", "ffc8dd", "ffafcc", "bde0fe", "a2d2ff"]
+      },
+      {
+        background: "green",
+        fontColors: ["ffbe0b", "fb5607", "ff006e", "8338ec", "3a86ff"]
+      },
+      {
+        background: "yellow",
+        fontColors: ["ccd5ae", "e9edc9", "fefae0", "faedcd", "d4a373"]
+      },
+      {
+        background: "blue",
+        fontColors: ["780000", "c1121f", "fdf0d5", "003049", "669bbc"]
+      },
+      {
+        background: "salmon",
+        fontColors: ["003049", "d62828", "f77f00", "fcbf49", "eae2b7"]
       }
+    ];
 
-      body {
-        font-weight: 400;
-        font-style:normal;
-        text-decoration: none;
-        text-transform: none;
-        letter-spacing: normal;
-        line-height: 1.15;
-        color: var(--dl-color-gray-black);
-        background-color: var(--dl-color-gray-white);
+    var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
+      '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+      '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
+      '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+      '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
+      '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+      '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
+      '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+      '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+      '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
 
-      }</style
-    ><link
-      rel="stylesheet"
-      href="https://unpkg.com/animate.css@4.1.1/animate.css"
-    /><link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
-      data-tag="font"
-    /><link
-      rel="stylesheet"
-      href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css"
-    />
-    <style>
-      .colorschemeClass{
-          display:block;
-          width:auto;
-          height:25px;
-          margin-bottom:4px;
+
+    var angles = [
+      "rotate(0deg)",
+      "rotate(0deg)",
+      "rotate(0deg)",
+      "rotate(0deg)",
+      "rotate(0deg)",
+      "rotate(0deg)",
+      "rotate(90deg)",
+      "rotate(0deg)",
+    ];
+
+    const enStopwords = ["i",
+      "me",
+      "my",
+      "myself",
+      "we",
+      "our",
+      "ours",
+      "ourselves",
+      "you",
+      "your",
+      "yours",
+      "yourself",
+      "yourselves",
+      "he",
+      "him",
+      "his",
+      "himself",
+      "she",
+      "her",
+      "hers",
+      "herself",
+      "it",
+      "its",
+      "itself",
+      "they",
+      "them",
+      "their",
+      "theirs",
+      "themselves",
+      "what",
+      "which",
+      "who",
+      "whom",
+      "this",
+      "that",
+      "these",
+      "those",
+      "am",
+      "is",
+      "are",
+      "was",
+      "were",
+      "be",
+      "been",
+      "being",
+      "have",
+      "has",
+      "had",
+      "having",
+      "do",
+      "does",
+      "did",
+      "doing",
+      "a",
+      "an",
+      "the",
+      "and",
+      "but",
+      "if",
+      "or",
+      "because",
+      "as",
+      "until",
+      "while",
+      "of",
+      "at",
+      "by",
+      "for",
+      "with",
+      "about",
+      "against",
+      "between",
+      "into",
+      "through",
+      "during",
+      "before",
+      "after",
+      "above",
+      "below",
+      "to",
+      "from",
+      "up",
+      "down",
+      "in",
+      "out",
+      "on",
+      "off",
+      "over",
+      "under",
+      "again",
+      "further",
+      "then",
+      "once",
+      "here",
+      "there",
+      "when",
+      "where",
+      "why",
+      "how",
+      "all",
+      "any",
+      "both",
+      "each",
+      "few",
+      "more",
+      "most",
+      "other",
+      "some",
+      "such",
+      "no",
+      "nor",
+      "not",
+      "only",
+      "own",
+      "same",
+      "so",
+      "than",
+      "too",
+      "very",
+      "s",
+      "t",
+      "can",
+      "will",
+      "just",
+      "don",
+      "should",
+      "now",
+      "yet",
+      "would",
+      "upon",
+      "shall",
+      "must",
+      "let",
+      "also",
+      "can",
+      "cannot",
+      "would",
+      "let",
+    ]; // Get English stopwords
+
+
+    function findMedian(ipArray) {
+      const arraySize = ipArray.length;
+      var returnArray;
+      if (ipArray.length % 2 === 0) {
+        //even
+        returnArray = (ipArray[arraySize / 2] + ipArray[1 + (arraySize / 2)]) / 2;
+      } else {
+        //odd
+        returnArray = ipArray[(arraySize + 1) / 2];
       }
-
-      .colorschemeClass:hover{
-          border:2px solid red;
-      }
-
-      .bgPatchClass{
-          display:inline-block;
-          width:100px;
-          height:25px;
-      }
-
-      .fontColorPatchClass{
-          display:inline-block;
-          width:50px;
-          height:25px;
-      }
-    </style>
-
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
-      integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script
-    ><script>
+      return returnArray;
+    }
 
 
-      var colorSchemes = [
+    function saveDivAsImage() {
+      const div = document.getElementById("opID");
 
-         {
-           background: "white",
-           fontColors: ["8ecae6", "219ebc", "023047", "ffb703", "fb8500"]
-         },
-         {
-           background: "white",
-           fontColors: ["606c38", "283618", "fefae0", "dda15e", "bc6c25"]
-         },
-         {
-           background: "black",
-           fontColors: ["cdb4db", "ffc8dd", "ffafcc", "bde0fe", "a2d2ff"]
-         },
-         {
-           background: "green",
-           fontColors: ["ffbe0b","fb5607","ff006e","8338ec","3a86ff"]
-         },
-         {
-           background: "yellow",
-           fontColors: ["ccd5ae","e9edc9","fefae0","faedcd","d4a373"]
-         },
-         {
-           background: "blue",
-           fontColors: ["780000","c1121f","fdf0d5","003049","669bbc"]
-         },
-         {
-           background: "salmon",
-           fontColors: ["003049","d62828","f77f00","fcbf49","eae2b7"]
-         }
-       ];
+      html2canvas(div)
+        .then(canvas => {
+          const imageData = canvas.toDataURL('image/png'); // Change format as needed (jpeg, etc.)
+          const link = document.createElement('a');
+          link.href = imageData;
+          link.download = "wordcloud_using_meridian.png";
+          link.click();
+        });
+    }
 
-         var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
-           '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-           '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
-           '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
-           '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
-           '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
-           '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
-           '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
-           '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
-           '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+    function generateWordCloud(txt) {
 
 
-         var angles = [
-           "rotate(0deg)",
-           "rotate(0deg)",
-           "rotate(0deg)",
-           "rotate(0deg)",
-           "rotate(0deg)",
-           "rotate(0deg)",
-           "rotate(90deg)",
-           "rotate(0deg)",
-         ];
+      // remove non-alphabet characters and convert everything to lower case
+      var cleanedText = txt.replace(/[^a-zA-Z ]/g, "").toLowerCase();
 
-         const enStopwords = ["i",
-           "me",
-           "my",
-           "myself",
-           "we",
-           "our",
-           "ours",
-           "ourselves",
-           "you",
-           "your",
-           "yours",
-           "yourself",
-           "yourselves",
-           "he",
-           "him",
-           "his",
-           "himself",
-           "she",
-           "her",
-           "hers",
-           "herself",
-           "it",
-           "its",
-           "itself",
-           "they",
-           "them",
-           "their",
-           "theirs",
-           "themselves",
-           "what",
-           "which",
-           "who",
-           "whom",
-           "this",
-           "that",
-           "these",
-           "those",
-           "am",
-           "is",
-           "are",
-           "was",
-           "were",
-           "be",
-           "been",
-           "being",
-           "have",
-           "has",
-           "had",
-           "having",
-           "do",
-           "does",
-           "did",
-           "doing",
-           "a",
-           "an",
-           "the",
-           "and",
-           "but",
-           "if",
-           "or",
-           "because",
-           "as",
-           "until",
-           "while",
-           "of",
-           "at",
-           "by",
-           "for",
-           "with",
-           "about",
-           "against",
-           "between",
-           "into",
-           "through",
-           "during",
-           "before",
-           "after",
-           "above",
-           "below",
-           "to",
-           "from",
-           "up",
-           "down",
-           "in",
-           "out",
-           "on",
-           "off",
-           "over",
-           "under",
-           "again",
-           "further",
-           "then",
-           "once",
-           "here",
-           "there",
-           "when",
-           "where",
-           "why",
-           "how",
-           "all",
-           "any",
-           "both",
-           "each",
-           "few",
-           "more",
-           "most",
-           "other",
-           "some",
-           "such",
-           "no",
-           "nor",
-           "not",
-           "only",
-           "own",
-           "same",
-           "so",
-           "than",
-           "too",
-           "very",
-           "s",
-           "t",
-           "can",
-           "will",
-           "just",
-           "don",
-           "should",
-           "now",
-           "yet",
-           "would",
-           "upon",
-           "shall",
-           "must",
-           "let",
-           "also",
-           "can",
-           "cannot",
-           "would",
-           "let",
-         ]; // Get English stopwords
+      // const text = txt.toLowerCase();
+      const words = cleanedText.split(/\W+/); // Split text into words (excluding non-word characters)
+      const filteredWords = words.filter(word => !enStopwords.includes(word)); // Remove stopwords
+
+      // Create a word count object (can be replaced with other word cloud generation libraries)
+      const wordCounts = {};
+      filteredWords.forEach(word => {
+        wordCounts[word] = (wordCounts[word] || 0) + 1;
+      });
+
+      // Convert word counts to an array for display
+      const wordCloudArray = Object.entries(wordCounts).map(([word, count]) => ({ word, count }));
+
+      const temp3 = Object.values(wordCounts);
+      console.log("Max = ", Math.max(...temp3));
+
+      var maxVal = Math.max(...temp3);
+      var minLimit = Math.floor(maxVal / 8);
+
+      var med = findMedian(temp3);
+
+      console.log("Median = ", med);
 
 
-         function findMedian(ipArray) {
-           const arraySize = ipArray.length;
-           var returnArray;
-           if (ipArray.length % 2 === 0) {
-             //even
-             returnArray = (ipArray[arraySize / 2] + ipArray[1 + (arraySize / 2)]) / 2;
-           } else {
-             //odd
-             returnArray = ipArray[(arraySize + 1) / 2];
-           }
-           return returnArray;
-         }
+      wordCloudArray.forEach(wordObj => {
+
+        var word = wordObj.word;
+        var count = wordObj.count;
+
+        if (word != "" && count > minLimit) {
+          var angle = Math.floor(Math.random() * 7);
+          tr1 = "rotate(" + angle + "deg)";
+          var wordDiv = document.createElement("div");
+          wordDiv.style.color = "white";
+          wordDiv.style.fontSize = count + "pt";
+          wordDiv.style.display = "inline-block";
+          wordDiv.style.padding = "1px";
+          wordDiv.style.margin = "1px";
+
+          wordDiv.style.color = colorArray[count];
+          wordDiv.textContent = word;
+          wordDiv.title = count;
+          wordDiv.style.transform = angles[angle];
+          document.getElementById("opID").appendChild(wordDiv);
+
+          console.log("Word = ", word, "Count = ", count);
+        }
+      });
+
+      document.getElementById("opID").style.height = "auto";
+    }
 
 
-         function saveDivAsImage() {
-           const div = document.getElementById("opID");
-
-           html2canvas(div)
-             .then(canvas => {
-               const imageData = canvas.toDataURL('image/png'); // Change format as needed (jpeg, etc.)
-               const link = document.createElement('a');
-               link.href = imageData;
-               link.download = "wordcloud_using_meridian.png";
-               link.click();
-             });
-         }
-
-         function generateWordCloud(txt) {
+    function generate() {
+      // clear the container in case it currently has a word cloud in it
+      document.getElementById("opID").innerHTML = "";
+      var textipEl = document.getElementById("textIpID");
+      var ipText = textipEl.value;
+      var x = generateWordCloud(ipText);
+    }
 
 
-           // remove non-alphabet characters and convert everything to lower case
-           var cleanedText = txt.replace(/[^a-zA-Z ]/g, "").toLowerCase();
-
-           // const text = txt.toLowerCase();
-           const words = cleanedText.split(/\W+/); // Split text into words (excluding non-word characters)
-           const filteredWords = words.filter(word => !enStopwords.includes(word)); // Remove stopwords
-
-           // Create a word count object (can be replaced with other word cloud generation libraries)
-           const wordCounts = {};
-           filteredWords.forEach(word => {
-             wordCounts[word] = (wordCounts[word] || 0) + 1;
-           });
-
-           // Convert word counts to an array for display
-           const wordCloudArray = Object.entries(wordCounts).map(([word, count]) => ({ word, count }));
-
-           const temp3 = Object.values(wordCounts);
-           console.log("Max = ", Math.max(...temp3));
-
-           var maxVal = Math.max(...temp3);
-           var minLimit = Math.floor(maxVal / 8);
-
-           var med = findMedian(temp3);
-
-           console.log("Median = ", med);
+    function hideModal() {
+      var modalWindow = document.getElementById("modalWindow");
+      modalWindow.style.visibility = "hidden";
+    }
 
 
-           wordCloudArray.forEach(wordObj => {
+    function showModal() {
+      var modalWindow = document.getElementById("modalWindow");
+      modalWindow.style.visibility = "visible";
 
-             var word = wordObj.word;
-             var count = wordObj.count;
+      //for each of the avaialble themes, add a div which holds the background and font-color patches
 
-             if (word != "" && count > minLimit) {
-               var angle = Math.floor(Math.random() * 7);
-               tr1 = "rotate(" + angle + "deg)";
-               var wordDiv = document.createElement("div");
-               wordDiv.style.color = "white";
-               wordDiv.style.fontSize = count + "pt";
-               wordDiv.style.display = "inline-block";
-               wordDiv.style.padding = "1px";
-               wordDiv.style.margin = "1px";
+      var schemesDIV = document.getElementById("schemesDIV");
+      schemesDIV.innerHTML = "";
 
-               wordDiv.style.color = colorArray[count];
-               wordDiv.textContent = word;
-               wordDiv.title = count;
-               wordDiv.style.transform = angles[angle];
-               document.getElementById("opID").appendChild(wordDiv);
+      colorSchemes.forEach(scheme => {
 
-               console.log("Word = ", word, "Count = ", count);
-             }
-           });
+        var colorSchemeDivEl = document.createElement("div");
+        colorSchemeDivEl.classList.add("colorschemeClass");
 
-           document.getElementById("opID").style.height="auto";
-         }
+        var bgPatch = document.createElement("div");
+        bgPatch.classList.add("bgPatchClass");
+        bgPatch.style.background = scheme.background;
+        colorSchemeDivEl.appendChild(bgPatch);
 
+        var fontColorsArray = scheme.fontColors;
 
-         function generate() {
-           // clear the container in case it currently has a word cloud in it
-           document.getElementById("opID").innerHTML = "";
-           var textipEl = document.getElementById("textIpID");
-           var ipText = textipEl.value;
-           var x = generateWordCloud(ipText);
-         }
+        fontColorsArray.forEach(fc => {
+
+          var fontColorPatch = document.createElement("div");
+          fontColorPatch.classList.add("fontColorPatchClass");
+          fontColorPatch.style.background = "#" + fc;
+          colorSchemeDivEl.appendChild(fontColorPatch);
+
+        });
+
+        schemesDIV.appendChild(colorSchemeDivEl);
+
+      });
+    }
 
 
-         function hideModal(){
-           var modalWindow = document.getElementById("modalWindow");
-           modalWindow.style.visibility = "hidden";
-         }
+    function modalOKClicked() {
+      hideModal();
+    }
 
+    function modalCancelClicked() {
+      hideModal();
+    }
 
-         function showModal(){
-           var modalWindow = document.getElementById("modalWindow");
-           modalWindow.style.visibility = "visible";
+    window.onload = () => {
+      var generateBtn = document.getElementById("generateID");
+      generateBtn.addEventListener('click', generate);
+      var downloadButtonEl = document.getElementById("downloadButtonID");
+      downloadButtonEl.addEventListener('click', saveDivAsImage);
 
-           //for each of the avaialble themes, add a div which holds the background and font-color patches
+      var settingsButtonEl = document.getElementById("customStopwordsID");
+      settingsButtonEl.addEventListener('click', showModal);
 
-           var schemesDIV = document.getElementById("schemesDIV");
-           schemesDIV.innerHTML = "";
+      //Ok button on Modal Window
+      var modalOKButton = document.getElementById("modalOKBtn");
+      modalOKButton.addEventListener('click', modalOKClicked);
 
-           colorSchemes.forEach(scheme=>{
+      //Ok button on Modal Window
+      var modalCancelButton = document.getElementById("modalCancelBtn");
+      modalCancelButton.addEventListener('click', modalCancelClicked);
 
-            var colorSchemeDivEl =document.createElement("div");
-            colorSchemeDivEl.classList.add("colorschemeClass");
+      console.log("Main window loaded");
+    }
+  </script>
+</head>
 
-            var bgPatch = document.createElement("div");
-            bgPatch.classList.add("bgPatchClass");
-            bgPatch.style.background = scheme.background;
-            colorSchemeDivEl.appendChild(bgPatch);
+<body>
+  <link rel="stylesheet" href="./style.css" />
+  <div>
+    <link href="./index.css" rel="stylesheet" />
+    <div class="home-container">
+      <div class="home-pagecontainer">
+        <div class="home-bannercontainer">
+          <h1 class="home-text">Word Cloud Generator</h1>
+        </div>
+        <div id="modalWindow" class="home-modal-window">
+          <h3 class="home-text1">Custom stopwords</h3><textarea
+            placeholder="enter your custom stopwords here. Space separated." class="home-textarea textarea"></textarea>
+          <div class="home-container1">
+            <div class="home-schemes">
+              <h3 class="home-text2">Colour scheme</h3>
+              <div id="schemesDIV" class="home-container2"></div>
+            </div>
+            <div class="home-container3">
+              <div class="home-buttonscontainer"><button id="modalOKBtn" type="button" class="button">Ok</button><button
+                  id="modalCancelBtn" type="button" class="button">Cancel
+                </button></div>
+            </div>
+          </div>
+        </div>
+        <div class="home-container4">
+          <textarea id="textIpID" placeholder="Paste Your Text Paragraph here. Clean Up  before you pase"
+            class="home-textarea1 textarea"></textarea>
+          <div class="home-container5"><button id="generateID" type="button"
+              class="home-button2 button">Generate</button><button id="downloadButtonID" type="button"
+              class="home-button3 button">Download Wordcloud</button><button id="customStopwordsID" type="button"
+              class="home-button4 button">Custom Stopwords</button></div>
+        </div>
+        <div id="opID" class="home-container6"></div>
+      </div>
+    </div>
+  </div>
+</body>
 
-         var fontColorsArray = scheme.fontColors;
-
-             fontColorsArray.forEach(fc=>{
-
-             var fontColorPatch = document.createElement("div");
-                 fontColorPatch.classList.add("fontColorPatchClass");
-                 fontColorPatch.style.background = "#"+fc;
-                 colorSchemeDivEl.appendChild(fontColorPatch);
-
-             });
-
-            schemesDIV.appendChild(colorSchemeDivEl);
-
-           });
-         }
-
-
-         function modalOKClicked(){
-             hideModal();
-         }
-
-         function modalCancelClicked(){
-             hideModal();
-         }
-
-         window.onload = () => {
-           var generateBtn = document.getElementById("generateID");
-           generateBtn.addEventListener('click', generate);
-           var downloadButtonEl = document.getElementById("downloadButtonID");
-           downloadButtonEl.addEventListener('click', saveDivAsImage);
-
-           var settingsButtonEl = document.getElementById("customStopwordsID");
-           settingsButtonEl.addEventListener('click', showModal);
-
-           //Ok button on Modal Window
-           var modalOKButton = document.getElementById("modalOKBtn");
-           modalOKButton.addEventListener('click',modalOKClicked);
-
-           //Ok button on Modal Window
-           var modalCancelButton = document.getElementById("modalCancelBtn");
-           modalCancelButton.addEventListener('click',modalCancelClicked);
-
-           console.log("Main window loaded");
-         }
-    </script></head
-  ><body
-    ><link rel="stylesheet" href="./style.css" /><div
-      ><link href="./index.css" rel="stylesheet" /><div class="home-container"
-        ><div class="home-pagecontainer"
-          ><div class="home-bannercontainer"
-            ><h1 class="home-text">Word Cloud Generator</h1></div
-          ><div id="modalWindow" class="home-modal-window"
-            ><h3 class="home-text1">Custom stopwords</h3
-            ><textarea
-              placeholder="enter your custom stopwords here. Space separated."
-              class="home-textarea textarea"
-            ></textarea
-            ><div class="home-container1"
-              ><div class="home-schemes"
-                ><h3 class="home-text2">Colour scheme</h3
-                ><div id="schemesDIV" class="home-container2"></div></div
-              ><div class="home-container3"
-                ><div class="home-buttonscontainer"
-                  ><button id="modalOKBtn" type="button" class="button"
-                    >Ok</button
-                  ><button id="modalCancelBtn" type="button" class="button"
-                    >Cancel
-                  </button></div
-                ></div
-              ></div
-            ></div
-          ><div class="home-container4">
-            <textarea
-              id="textIpID"
-              placeholder="Paste Your Text Paragraph here. Clean Up  before you pase"
-              class="home-textarea1 textarea"
-            ></textarea
-            ><div class="home-container5"
-              ><button id="generateID" type="button" class="home-button2 button"
-                >Generate</button
-              ><button
-                id="downloadButtonID"
-                type="button"
-                class="home-button3 button"
-                >Download Wordcloud</button
-              ><button
-                id="customStopwordsID"
-                type="button"
-                class="home-button4 button"
-                >Custom Stopwords</button
-              ></div
-            ></div
-          ><div id="opID" class="home-container6"></div></div></div
-    ></div> </body
-></html>
+</html>
