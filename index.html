@@ -398,13 +398,13 @@
       const temp3 = Object.values(wordCounts);
       console.log("Max = ", Math.max(...temp3));
 
+      var sortedTemp3 = temp3.sort((a, b) => a - b);
+      var med = findMedian(sortedTemp3);
+
       var maxVal = Math.max(...temp3);
       var minLimit = Math.floor(maxVal / 8);
 
-      var med = findMedian(temp3);
-
       console.log("Median = ", med);
-
 
       wordCloudArray.forEach(wordObj => {
 
@@ -427,7 +427,7 @@
           wordDiv.style.transform = angles[angle];
           document.getElementById("opID").appendChild(wordDiv);
 
-          console.log("Word = ", word, "Count = ", count);
+          // console.log("Word = ", word, "Count = ", count);
         }
       });
 
@@ -463,6 +463,7 @@
 
         var colorSchemeDivEl = document.createElement("div");
         colorSchemeDivEl.classList.add("colorschemeClass");
+        colorSchemeDivEl.dataset.scheme = scheme;
 
         var bgPatch = document.createElement("div");
         bgPatch.classList.add("bgPatchClass");
@@ -531,6 +532,8 @@
           <div class="home-container1">
             <div class="home-schemes">
               <h3 class="home-text2">Colour scheme</h3>
+              <p>Click to select</p> 
+              <br>
               <div id="schemesDIV" class="home-container2"></div>
             </div>
             <div class="home-container3">
