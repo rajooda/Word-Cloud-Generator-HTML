@@ -379,10 +379,11 @@
     function top100Words(string) {
       // Convert the string to lowercase and split it into an array of words.
       const words = string.toLowerCase().split(/\W+/);
+      const filteredWords = words.filter(word => !enStopwords.includes(word)); // Remove stopwords
 
       // Create a map to store the frequency of each word.
       const wordFrequencyMap = {};
-      for (const word of words) {
+      for (const word of filteredWords) {
         if (!wordFrequencyMap[word]) {
           wordFrequencyMap[word] = 0;
         }
@@ -402,47 +403,61 @@
 
     function generateWordCloud(txt) {
 
+      // top100Words(txt).forEach(([word, count]) => {
+      //   console.log(`${word}: ${count}`);
+      // });
+
+
+      var topwords = top100Words(txt);
+
+
 
       // remove non-alphabet characters and convert everything to lower case
-      var cleanedText = txt.replace(/[^a-zA-Z ]/g, "").toLowerCase();
+      // var cleanedText = txt.replace(/[^a-zA-Z ]/g, "").toLowerCase();
 
-      // const text = txt.toLowerCase();
-      const words = cleanedText.split(/\W+/); // Split text into words (excluding non-word characters)
-      const filteredWords = words.filter(word => !enStopwords.includes(word)); // Remove stopwords
+      // // const text = txt.toLowerCase();
+      // const words = cleanedText.split(/\W+/); // Split text into words (excluding non-word characters)
+      // const filteredWords = words.filter(word => !enStopwords.includes(word)); // Remove stopwords
 
-      // Create a word count object (can be replaced with other word cloud generation libraries)
-      const wordCounts = {};
-      filteredWords.forEach(word => {
-        wordCounts[word] = (wordCounts[word] || 0) + 1;
-      });
+      // // Create a word count object (can be replaced with other word cloud generation libraries)
+      // const wordCounts = {};
+      // filteredWords.forEach(word => {
+      //   wordCounts[word] = (wordCounts[word] || 0) + 1;
+      // });
 
-      // Convert word counts to an array for display
-      const wordCloudArray = Object.entries(wordCounts).map(([word, count]) => ({ word, count }));
+      // // Convert word counts to an array for display
+      // const wordCloudArray = Object.entries(wordCounts).map(([word, count]) => ({ word, count }));
 
-      const temp3 = Object.values(wordCounts);
-      console.log("Max = ", Math.max(...temp3));
+      // const temp3 = Object.values(wordCounts);
+      // console.log("Max = ", Math.max(...temp3));
 
-      var med = findMedian(sortedTemp3);
+ 
+      // var maxVal = Math.max(...temp3);
+      // var minLimit = Math.floor(maxVal / 8);
 
-      var maxVal = Math.max(...temp3);
-      var minLimit = Math.floor(maxVal / 8);
+      var minLimit = 4;
 
-      console.log("Median = ", med);
+      var mx = topwords[0][1];
+      var mm = topwords[topwords.length - 1][1];
 
-      wordCloudArray.forEach(wordObj => {
+      var ratio = mx / mm;
 
-        var word = wordObj.word;
-        var count = wordObj.count;
+      
+
+      topwords.forEach(wordObj => {
+
+        var word = wordObj[0];
+        var count = wordObj[1];
 
         if (word != "" && count > minLimit) {
           var angle = Math.floor(Math.random() * 7);
           tr1 = "rotate(" + angle + "deg)";
           var wordDiv = document.createElement("div");
           wordDiv.style.color = "white";
-          wordDiv.style.fontSize = count + "pt";
+          wordDiv.style.fontSize = (count*Math.log(count,10)) + "pt";
           wordDiv.style.display = "inline-block";
-          wordDiv.style.padding = "1px";
-          wordDiv.style.margin = "1px";
+          wordDiv.style.padding = Math.floor(ratio) + "px";
+          wordDiv.style.margin = Math.floor(ratio) + "px";
 
           wordDiv.style.color = colorArray[count];
           wordDiv.textContent = word;
