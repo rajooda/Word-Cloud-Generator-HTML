@@ -117,11 +117,13 @@
 
     }
   </style>
+
   <link rel="stylesheet" href="https://unpkg.com/animate.css@4.1.1/animate.css" />
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
     data-tag="font" />
   <link rel="stylesheet" href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css" />
+
   <style>
     .colorschemeClass {
       display: block;
@@ -145,13 +147,31 @@
       width: 50px;
       height: 25px;
     }
+
+
+    .wordcloudSpanClass {
+      position: relative
+    }
   </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
     integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.1/wordcloud2.js"
+    integrity="sha512-av5zd7jR6xcirJn0hLukcIH2MYyjYWWTl75idIX2AYqm6/IeJBolZOVb3MB/jj8xPipLRULIs9xGfCzOJGAH1Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+  <script src="wordcloud2.js">
+
+  </script>
+
   <script>
 
+
+
+    var minSIZE = 0;
 
     var colorSchemes = [
 
@@ -348,6 +368,8 @@
       "let",
     ]; // Get English stopwords
 
+    var customStopwords = [];
+
 
     function findMedian(ipArray) {
       const arraySize = ipArray.length;
@@ -381,9 +403,11 @@
       const words = string.toLowerCase().split(/\W+/);
       const filteredWords = words.filter(word => !enStopwords.includes(word)); // Remove stopwords
 
+      const secondFilteredWords = filteredWords.filter(word => !customStopwords.includes(word)); // Remove custom stopwords
+
       // Create a map to store the frequency of each word.
       const wordFrequencyMap = {};
-      for (const word of filteredWords) {
+      for (const word of secondFilteredWords) {
         if (!wordFrequencyMap[word]) {
           wordFrequencyMap[word] = 0;
         }
@@ -396,86 +420,43 @@
       // Get the top 100 words.
       const top100Words = sortedWordFrequencyMap.slice(0, 100);
 
+      var selectedMax = top100Words[0][1];
+      var selectedMin = top100Words[top100Words.length-1][1];
+
+      if(selectedMax < 20){
+        top100Words.forEach((word, index) => {
+          top100Words[index][1] = word[1] * 10;
+        });
+      }
+
+      console.log(top100Words);
+
       // Return the top 100 words.
       return top100Words;
     }
 
 
     function generateWordCloud(txt) {
-
-      // top100Words(txt).forEach(([word, count]) => {
-      //   console.log(`${word}: ${count}`);
-      // });
-
-
+      minSIZE = localStorage.getItem("minCount");
       var topwords = top100Words(txt);
 
-
-
-      // remove non-alphabet characters and convert everything to lower case
-      // var cleanedText = txt.replace(/[^a-zA-Z ]/g, "").toLowerCase();
-
-      // // const text = txt.toLowerCase();
-      // const words = cleanedText.split(/\W+/); // Split text into words (excluding non-word characters)
-      // const filteredWords = words.filter(word => !enStopwords.includes(word)); // Remove stopwords
-
-      // // Create a word count object (can be replaced with other word cloud generation libraries)
-      // const wordCounts = {};
-      // filteredWords.forEach(word => {
-      //   wordCounts[word] = (wordCounts[word] || 0) + 1;
-      // });
-
-      // // Convert word counts to an array for display
-      // const wordCloudArray = Object.entries(wordCounts).map(([word, count]) => ({ word, count }));
-
-      // const temp3 = Object.values(wordCounts);
-      // console.log("Max = ", Math.max(...temp3));
-
- 
-      // var maxVal = Math.max(...temp3);
-      // var minLimit = Math.floor(maxVal / 8);
-
-      var minLimit = 4;
-
-      var mx = topwords[0][1];
-      var mm = topwords[topwords.length - 1][1];
-
-      var ratio = mx / mm;
-
-      
-
-      topwords.forEach(wordObj => {
-
-        var word = wordObj[0];
-        var count = wordObj[1];
-
-        if (word != "" && count > minLimit) {
-          var angle = Math.floor(Math.random() * 7);
-          tr1 = "rotate(" + angle + "deg)";
-          var wordDiv = document.createElement("div");
-          wordDiv.style.color = "white";
-          wordDiv.style.fontSize = (count*Math.log(count,10)) + "pt";
-          wordDiv.style.display = "inline-block";
-          wordDiv.style.padding = Math.floor(ratio) + "px";
-          wordDiv.style.margin = Math.floor(ratio) + "px";
-
-          wordDiv.style.color = colorArray[count];
-          wordDiv.textContent = word;
-          wordDiv.title = count;
-          wordDiv.style.transform = angles[angle];
-          document.getElementById("opID").appendChild(wordDiv);
-
-          // console.log("Word = ", word, "Count = ", count);
-        }
+      WordCloud(document.getElementById('opID'), {
+        list: topwords,
+        drawOutOfBound: false,
+        shrinkToFit: true,
+        classes: 'wordcloudSpanClass',
+        minSize: minSIZE,
+        shape: 'triangle'
       });
 
       document.getElementById("opID").style.height = "auto";
+
     }
 
 
     function generate() {
       // clear the container in case it currently has a word cloud in it
-      document.getElementById("opID").innerHTML = "";
+      // document.getElementById("opID").innerHTML = "";
       var textipEl = document.getElementById("textIpID");
       var ipText = textipEl.value;
       var x = generateWordCloud(ipText);
@@ -524,8 +505,14 @@
       });
     }
 
+    function clearCloud(){  
+      document.getElementById("opID").innerHTML = "";
+    }
 
     function modalOKClicked() {
+      getAndSetCustomStopwords();
+      clearCloud();
+      generate();
       hideModal();
     }
 
@@ -551,7 +538,54 @@
       modalCancelButton.addEventListener('click', modalCancelClicked);
 
       console.log("Main window loaded");
+
+
+      const value = document.querySelector("#selctedIPValue");
+      const input = document.querySelector("#minSizeID");
+      value.textContent = input.value;
+
+
+      input.addEventListener("input", (event) => {
+        value.textContent = event.target.value;
+      });
+
+
+      if (browserSupportsLocalStorage()) {
+        var customStopwords = localStorage.getItem("customStopwords");
+        var minSIZE = localStorage.getItem("minCount");
+        if (customStopwords) {
+          document.querySelector(".home-textarea").value = customStopwords;
+        }
+        if (minSIZE) {
+          document.querySelector("#minSizeID").value = minSIZE;
+          document.querySelector("#selctedIPValue").textContent = minSIZE;
+        }
+      }
     }
+
+
+    function browserSupportsLocalStorage() {
+      try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function getAndSetCustomStopwords() {
+      const value = document.querySelector("#selctedIPValue");
+      const input = document.querySelector("#minSizeID");
+
+      var customStopwords = document.querySelector(".home-textarea").value;
+      enStopwords.push(...customStopwords.toLowerCase().split(","));
+      console.log(enStopwords);
+
+      if (browserSupportsLocalStorage()) {
+        localStorage.setItem("customStopwords", customStopwords);
+        localStorage.setItem("minCount", value.textContent)
+      }
+    }
+
   </script>
 </head>
 
@@ -566,7 +600,8 @@
         </div>
         <div id="modalWindow" class="home-modal-window">
           <h3 class="home-text1">Custom stopwords</h3><textarea
-            placeholder="enter your custom stopwords here. Space separated." class="home-textarea textarea"></textarea>
+            placeholder="enter your custom stopwords here. Space separated." class="home-textarea textarea"
+            id="home-textareaID"></textarea>
           <div class="home-container1">
             <div class="home-schemes">
               <h3 class="home-text2">Colour scheme</h3>
@@ -575,6 +610,13 @@
               <div id="schemesDIV" class="home-container2"></div>
             </div>
             <div class="home-container3">
+
+              <div>
+                <label for="minSize" placeholder="Minimum Count">Minimum Count</label><span
+                  style="display: inline-block;margin-left:10px;margin-right: 10px;" id="selctedIPValue"> </span>
+                <input type="range" name="minSize" id="minSizeID" min="5" max="20" title="Minimum Count">
+              </div>
+
               <div class="home-buttonscontainer"><button id="modalOKBtn" type="button" class="button">Ok</button><button
                   id="modalCancelBtn" type="button" class="button">Cancel
                 </button></div>
@@ -589,7 +631,18 @@
               class="home-button3 button">Download Wordcloud</button><button id="customStopwordsID" type="button"
               class="home-button4 button">Custom Stopwords</button></div>
         </div>
-        <div id="opID" class="home-container6"></div>
+
+
+
+        <div id="opID" class="home-container6">
+
+       
+
+
+        </div>
+        <!-- <canvas id="wordcloudCanvas" style="width: 500px; height: 500px;">
+
+        </canvas> -->
       </div>
     </div>
   </div>

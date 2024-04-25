@@ -166,6 +166,7 @@
   border-width: 1px;
   justify-content: center;
   background-color: #080808;
+ 
 }
 @media(max-width: 1600px) {
   .home-container4 {
@@ -178,7 +179,7 @@
     height: 100%;
   }
   .home-container5 {
-    displ: flex;
+    display: flex;
     padding: var(--dl-space-space-halfunit);
     flex-wrap: wrap;
     flex-direction: column;
